@@ -17,42 +17,25 @@ Expression::Expression(std::string symbol, std::unique_ptr<Expression> &&left, s
 float Expression::eval()
 {
     auto current_operation = operations_map.find(symbol[0]);
-    if (current_operation == operations_map.end())
-    {
-        return std::stof(symbol);
-    }
-    else
-    {
-        return (*current_operation).second.operation(left->eval(), right->eval());
-    }
+    return current_operation == operations_map.end() ? std::stof(symbol) : (*current_operation).second.operation(left->eval(), right->eval());
 }
 
 Expression Expression::parse(std::string s)
 {
-    s.erase(std::remove(s.begin(), s.end(), ' '), s.end());
-    Expression r = parseRec(s);
-    return r;
+    s.erase(std::remove(s.begin(), s.end(), ' '), s.end()); //Remove whitespace
+    return parseRec(s);
 }
 
 Expression::op_precedence Expression::precedence(char ch)
 {
     auto current_op{operations_map.find(ch)};
-    if (current_op != operations_map.end())
-    {
-        return (*current_op).second.pres;
-    }
-    else
-    {
-        return Expression::op_precedence::NON_OP;
-    }
+    return current_op == operations_map.end() ? op_precedence::NON_OP : (*current_op).second.pres;
 }
 
 Expression Expression::parseRec(const std::string &s)
 {
     if (s.empty())
-    {
         return Expression("0", nullptr, nullptr);
-    }
 
     std::string::const_iterator lowestOp = s.begin();
     int openBrackets = 0;
@@ -72,13 +55,9 @@ Expression Expression::parseRec(const std::string &s)
                 lowestOp = i;
     }
     if (*lowestOp == '(')
-    {
         return parseRec(s.substr(1, s.length() - 2));
-    }
     else if (precedence(*lowestOp) == op_precedence::NON_OP)
-    {
         return Expression(s, nullptr, nullptr);
-    }
     else
     {
         return Expression(std::string(1, *lowestOp),
