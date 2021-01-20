@@ -3,7 +3,7 @@
 #include <cmath>
 #include <unordered_map>
 
-static const std::unordered_map<char, Expression::op> operations_map{
+static const std::unordered_map<char, Expression::operation> operations_map{
     {'+', {Expression::op_precedence::LOW, [](float a, float b) { return a + b; }}},
     {'-', {Expression::op_precedence::LOW, [](float a, float b) { return a - b; }}},
     {'*', {Expression::op_precedence::MED, [](float a, float b) { return a * b; }}},

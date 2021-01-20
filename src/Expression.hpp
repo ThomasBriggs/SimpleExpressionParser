@@ -17,7 +17,7 @@ public:
         NON_OP
     };
 
-    struct op
+    struct operation
     {
         Expression::op_precedence pres;
         float (*operation)(float, float);
