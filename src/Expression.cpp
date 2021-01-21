@@ -4,12 +4,12 @@
 #include <unordered_map>
 
 enum class op_precedence
-    {
-        LOW,
-        MED,
-        HIGH,
-        NON_OP
-    };
+{
+    LOW,
+    MED,
+    HIGH,
+    NON_OP
+};
 
 struct operation
 {
@@ -17,7 +17,7 @@ struct operation
     float (*operation)(float, float);
 };
 
-static float factorial(float a) { return a <= 1 ? 1 : a * factorial(a - 1);}
+static float factorial(float a) { return a <= 1 ? 1 : a * factorial(a - 1); }
 
 static const std::unordered_map<char, operation> operations_map{
     {'+',
@@ -47,7 +47,6 @@ static op_precedence precedence(char ch)
     auto op{operations_map.find(ch)};
     return op == operations_map.end() ? op_precedence::NON_OP : (*op).second.pres;
 }
-
 
 Expression::Expression(std::string symbol, std::unique_ptr<Expression> &&left,
                        std::unique_ptr<Expression> &&right)
