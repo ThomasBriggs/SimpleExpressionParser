@@ -8,6 +8,7 @@ int main(int argc, char const *argv[])
     {
         output.append(argv[i]);
     }
+    std::cout.precision(16);
     std::cout << Expression::parse(output).eval() << '\n';
     return 0;
 }

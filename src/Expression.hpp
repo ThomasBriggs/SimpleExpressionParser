@@ -6,7 +6,7 @@
 class Expression
 {
 public:
-    float eval();
+    double eval();
     static Expression parse(std::string s);
 
 private:

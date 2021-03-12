@@ -1,3 +1,4 @@
+#define _USE_MATH_DEFINES
 #include "Expression.hpp"
 #include <algorithm>
 #include <cmath>
@@ -14,33 +15,51 @@ enum class op_precedence
 struct operation
 {
     op_precedence pres;
-    float (*operation)(float, float);
+    double (*operation)(double, double);
 };
 
-static float factorial(float a) { return a <= 1 ? 1 : a * factorial(a - 1); }
+static double factorial(float a) { return a <= 1 ? 1 : a * factorial(a - 1); }
 
 static const std::unordered_map<char, operation> operations_map{
     {'+',
      {op_precedence::LOW,
-      [](float a, float b) { return a + b; }}},
+      [](double a, double b) { return a + b; }}},
     {'-',
      {op_precedence::LOW,
-      [](float a, float b) { return a - b; }}},
+      [](double a, double b) { return a - b; }}},
     {'*',
      {op_precedence::MED,
-      [](float a, float b) { return a * b; }}},
+      [](double a, double b) { return a * b; }}},
     {'/',
      {op_precedence::MED,
-      [](float a, float b) { return a / b; }}},
+      [](double a, double b) { return a / b; }}},
     {'^',
      {op_precedence::HIGH,
-      [](float a, float b) { return std::pow(a, b); }}},
+      [](double a, double b) { return std::pow(a, b); }}},
     {'&',
      {op_precedence::HIGH,
-      [](float a, float b) { return std::pow(a, (1 / b)); }}},
+      [](double a, double b) { return std::pow(a, (1 / b)); }}},
     {'!',
      {op_precedence::HIGH,
-      [](float a, float b) { return factorial(a); }}}};
+      [](double a, double b) { return factorial(a); }}},
+    {'s',
+     {op_precedence::HIGH,
+      [](double a, double b) { return std::sin(b * M_PI / 180); }}},
+    {'c',
+     {op_precedence::HIGH,
+      [](double a, double b) { return std::cos(b * M_PI / 180); }}},
+    {'t',
+     {op_precedence::HIGH,
+      [](double a, double b) { return std::tan(b * M_PI / 180); }}},
+    {'S',
+     {op_precedence::HIGH,
+      [](double a, double b) { return std::sin(b); }}},
+    {'C',
+     {op_precedence::HIGH,
+      [](double a, double b) { return std::cos(b); }}},
+    {'T',
+     {op_precedence::HIGH,
+      [](double a, double b) { return std::tan(b); }}}};
 
 static op_precedence precedence(char ch)
 {
@@ -52,7 +71,7 @@ Expression::Expression(std::string symbol, std::unique_ptr<Expression> &&left,
                        std::unique_ptr<Expression> &&right)
     : symbol(symbol), left(std::move(left)), right(std::move(right)) {}
 
-float Expression::eval()
+double Expression::eval()
 {
     auto current_operation = operations_map.find(symbol[0]);
     if (current_operation != operations_map.end())
